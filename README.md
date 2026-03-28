@@ -27,11 +27,9 @@ Docker containers share the host system’s kernel, which makes them fast, light
 | ------------- | ------------- |
 | Run a full OS inside | Share the host OS |
 | Heavy on resources | Light and fast |
-	
-Run a full OS inside	Share the host OS
-Heavy on resources	Light and fast
-Slow to start	Start in seconds
-Strong isolation	Lighter isolation
+| Slow to start | Start in seconds |
+| Strong isolation | Lighter isolation |
+
 Containers are just easier to work with for this kind of project.
 
 **Secrets vs Environment Variables**
