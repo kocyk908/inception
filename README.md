@@ -1,259 +1,48 @@
-*This project has been created as part of the 42 curriculum by <bkaleta>*
+*This project has been created as part of the 42 curriculum by <lkoc>*
 
-# Inception
+# Inception: Docker Infrastructure Project
 
-## Description
+## Project Description
+[cite_start]The primary goal of this system administration project is to build a robust, small-scale infrastructure using Docker and Docker Compose[cite: 479]. [cite_start]The environment virtualizes three distinct services running in separate, dedicated containers: an NGINX web server to handle secure HTTPS traffic, a WordPress installation running on PHP-FPM for content management, and a MariaDB instance serving as the database backend[cite: 358, 359, 360, 479]. [cite_start]The entire architecture relies on an internal Docker network for secure container-to-container communication and utilizes Docker volumes to ensure long-term data persistence[cite: 361, 362, 365, 479].
 
-The goal of this project is to set up a small infrastructure using
-Docker and Docker Compose. The infrastructure consists of multiple
-containers that work together to provide a fully functional WordPress
-environment.
+---
 
-The project includes three main services:
+## Architectural & Design Choices
 
--   NGINX - a web server responsible for serving HTTPS traffic.
--   MariaDB - a database used by WordPress.
--   WordPress - a PHP-based CMS running on PHP-FPM.
+**Virtual Machines vs Docker Containers**
+[cite_start]Virtual Machines emulate a complete hardware stack and require a full guest Operating System, making them resource-heavy and slow to boot[cite: 486]. Docker containers, on the other hand, share the host system's kernel, providing process-level isolation. [cite_start]This makes containers significantly more lightweight, allowing them to start almost instantly while consuming a fraction of the CPU and RAM[cite: 486].
 
-Each service runs inside its own Docker container, and the containers
-communicate with each other through a dedicated Docker network.
+**Secrets vs Environment Variables**
+[cite_start]Environment variables are easy to configure and useful for general settings like domain names, but they can be exposed if the container's environment is inspected[cite: 487]. [cite_start]Docker Secrets provide a much higher level of security for sensitive data (like database passwords) by mounting them as temporary, encrypted files inside the container's memory rather than exposing them as plain text variables[cite: 487].
 
-The infrastructure also uses Docker volumes to persist data and Docker
-secrets / environment variables to manage configuration securely.
+**Docker Network vs Host Network**
+[cite_start]Using the host network bridges the container directly to the host machine's interfaces, removing network isolation[cite: 488]. This project implements a custom Docker bridge network, which isolates the services from the outside world. [cite_start]Only the NGINX container exposes a port to the host, while WordPress and MariaDB communicate securely over the internal DNS without being accessible from the public internet[cite: 488].
 
-------------------------------------------------------------------------
+**Docker Volumes vs Bind Mounts**
+[cite_start]Bind mounts rely on the specific directory structure of the host machine, mapping a host folder directly into the container[cite: 489]. [cite_start]Docker named volumes are fully managed by the Docker daemon, making them more portable, secure, and easier to back up[cite: 489]. [cite_start]In this architecture, persistent data is routed to `/home/lkoc/data` using named volumes to ensure database entries and website files survive container restarts[cite: 364].
 
-# Project Architecture
+---
 
-The infrastructure consists of three containers:
+## Instructions
 
-NGINX │ │ WordPress │ │ MariaDB
+**Prerequisites**
+[cite_start]You need Docker, Docker Compose, and Make installed on your system[cite: 480]. [cite_start]Ensure that your local hosts file redirects `lkoc.42.fr` to your local IP[cite: 384, 385].
 
--   NGINX listens only on port 443 (HTTPS).
--   WordPress communicates with MariaDB through the internal Docker
-    network.
--   MariaDB stores persistent data in a volume.
+**Deployment**
+[cite_start]Navigate to the root directory where the `Makefile` is located and execute the following command to build the images and start the infrastructure in the background[cite: 480]:
+`make`
 
-------------------------------------------------------------------------
+**Shutdown**
+[cite_start]To safely stop the containers and remove the networks, run[cite: 480]:
+`make down`
 
-# Design Choices
+---
 
-## Virtual Machines vs Docker
+## Resources & AI Usage
+**Official Documentation:**
+* Docker & Docker Compose Docs: docs.docker.com
+* NGINX Documentation: nginx.org/en/docs
+* MariaDB Knowledge Base: mariadb.com/kb
 
-  -----------------------------------------------------------------------
-  Virtual Machines                    Docker
-  ----------------------------------- -----------------------------------
-  Each VM includes a full operating   Containers share the host OS kernel
-  system
-
-  Higher resource consumption         Lightweight and faster
-
-  Slower startup time                 Containers start almost instantly
-
-  Strong isolation                    Process-level isolation
-  -----------------------------------------------------------------------
-
-------------------------------------------------------------------------
-
-## Secrets vs Environment Variables
-
-  -----------------------------------------------------------------------
-  Environment Variables               Docker Secrets
-  ----------------------------------- -----------------------------------
-  Stored in ".env" files              Stored in secure files mounted
-                                      inside containers
-
-  Easy to configure                   More secure for sensitive data
-
-  Visible in container environment    Not exposed directly as environment
-                                      variables
-  -----------------------------------------------------------------------
-
-In this project: - Most configuration values are stored in ".env" -
-Database passwords are stored using Docker secrets
-
-------------------------------------------------------------------------
-
-## Docker Network vs Host Network
-
-  -----------------------------------------------------------------------
-  Docker Network                      Host Network
-  ----------------------------------- -----------------------------------
-  Containers communicate via internal Containers share host networking
-  DNS
-
-  Better isolation                    Less isolation
-
-  Default and recommended approach    Often restricted in production
-  -----------------------------------------------------------------------
-
-The project uses a custom bridge network ("inception") so containers can
-communicate securely.
-
-------------------------------------------------------------------------
-
-## Docker Volumes vs Bind Mounts
-
-  Docker Volumes               Bind Mounts
-  ---------------------------- --------------------------------
-  Managed by Docker            Directly maps host directories
-  More portable                Depends on host filesystem
-  Recommended for production   Often used for development
-
-The project uses Docker named volumes to store persistent data while
-ensuring the data is stored on the host inside:
-
-/home/<login>/data
-
-Persistent volumes: - WordPress files - MariaDB database files
-
-------------------------------------------------------------------------
-
-# Instructions
-
-## Requirements
-
--   Docker
--   Docker Compose
--   Make
-
-## Running the Project
-
-Build and start all containers:
-
-make or docker compose up -d --build
-
-## Stop the infrastructure
-
-make down or docker compose down
-
-## Rebuild containers
-
-make up or docker compose build
-
-## View logs
-
-docker compose logs -f
-
-------------------------------------------------------------------------
-
-# Most Common Docker Commands
-
-  Command        Description
-  -------------- -----------------------------------------
-  docker build   Builds a Docker image from a Dockerfile
-  docker run     Runs a new container from an image
-  docker pull    Downloads an image from a registry
-  docker push    Uploads an image to a registry
-  docker ps      Lists running containers
-  docker stop    Stops a running container
-  docker rm      Removes a stopped container
-  docker rmi     Removes an image
-  docker exec    Executes a command inside a container
-  docker logs    Shows container logs
-
-------------------------------------------------------------------------
-
-# Most Common Docker Compose Commands
-
-  -----------------------------------------------------------------------
-  Command                     Description
-  --------------------------- -------------------------------------------
-  docker compose up           Builds and starts containers
-
-  docker compose down         Stops and removes containers, networks and
-                              volumes
-
-  docker compose start        Starts existing containers
-
-  docker compose stop         Stops containers
-
-  docker compose restart      Restarts containers
-
-  docker compose build        Builds images defined in docker-compose.yml
-
-  docker compose ps           Lists containers managed by Compose
-
-  docker compose logs         Displays logs
-
-  docker compose exec         Runs a command inside a container
-
-  docker compose pull         Pulls images from registry
-
-  docker compose push         Pushes images to registry
-  -----------------------------------------------------------------------
-
-------------------------------------------------------------------------
-
-# NGINX Tests
-
-Commands used to verify that NGINX is accessible only through port 443.
-
-curl -I http://localhost curl -kI https://localhost
-
-nc -zv localhost 80 nc -zv localhost 443
-
-Browser tests:
-
-http://bkaleta.42.fr https://bkaleta.42.fr
-
-Expected result: - HTTP (80) → connection refused - HTTPS (443) →
-WordPress page loads
-
-------------------------------------------------------------------------
-
-# WordPress / Database Tests
-
-Enter MariaDB container:
-
-docker exec -it mariadb sh
-
-Login to database:
-
-mariadb -u root -p\$(cat /run/secrets/db_root_password)
-
-Check database structure:
-
-SHOW DATABASES; USE wordpress; SHOW TABLES;
-
-Verify WordPress users:
-
-SELECT ID, user_login, user_email FROM wp_users;
-
-Check roles:
-
-SELECT \* FROM wp_usermeta WHERE meta_key='wp_capabilities';
-
-Exit:
-
-exit
-
-------------------------------------------------------------------------
-
-# Resources
-
-Docker documentation\
-https://docs.docker.com/
-
-Docker Compose documentation\
-https://docs.docker.com/compose/
-
-NGINX documentation\
-https://nginx.org/en/docs/
-
-WordPress CLI documentation\
-https://developer.wordpress.org/cli/
-
-MariaDB documentation\
-https://mariadb.org/documentation/
-
-------------------------------------------------------------------------
-
-# Use of AI Tools
-
-AI tools (including ChatGPT) were used to: 
-  clarify Docker concepts
-  debug container networking issues 
-  improve shell scripts verify
-
-All code and configuration were reviewed and tested manually.
+**AI Tools Usage:**
+[cite_start]During the development of this project, AI (Large Language Models) was used as an interactive learning assistant[cite: 481]. [cite_start]Specifically, AI was prompted to explain the differences between Docker volumes and bind mounts, to assist in debugging NGINX SSL certificate generation errors, and to review the shell scripts (`entrypoint.sh`) for infinite loops or bad practices[cite: 308, 315, 481]. [cite_start]All generated concepts were manually verified, tested, and rewritten to ensure full comprehension and compliance with the subject rules[cite: 311, 315].
