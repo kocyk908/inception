@@ -99,7 +99,7 @@ Add `lkoc.42.fr` to your `/etc/hosts` file and point it to your local IP.
 Open your terminal, go to the folder with the `Makefile` and type:
 * `make`
 
-to build the Docker images and start the infrastructure in the background
+to build the Docker images and start the infrastructure in the background.
 
 **Shutdown**
 
