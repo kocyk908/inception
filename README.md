@@ -6,59 +6,105 @@
 The goal of this project is to build a small, working infrastructure using Docker and Docker Compose.
 It runs three services, each in its own container:
 
-NGINX - handles secure traffic (HTTPS only)
+* NGINX - handles secure traffic (HTTPS only)
 
-WordPress + PHP-FPM - runs the website
+* WordPress + PHP-FPM - runs the website
 
-MariaDB - stores all the data
+* MariaDB - stores all the data
 
 All containers talk to each other over a dedicated Docker network.
 Data is kept safe using Docker volumes, so nothing is lost when containers stop or restart.
+
+**Links:**
+* Website: https://lkoc.42.fr
+* Admin Panel: https://lkoc.42.fr/wp-admin
 
 ---
 
 ## Design Choices
 
 **Virtual Machines vs Docker Containers**
+
 Virtual machines need a full operating system and take up a lot of resources.
 Docker containers share the host system’s kernel, which makes them fast, lightweight, and easy to start.
 
-| Virtual Machines      | Docker Containers      |
-| ------------- | ------------- |
+| Virtual Machines     | Docker Containers |
+|----------------------|-------------------|
 | Run a full OS inside | Share the host OS |
-| Heavy on resources | Light and fast |
-| Slow to start | Start in seconds |
-| Strong isolation | Lighter isolation |
+| Heavy on resources   | Light and fast    |
+| Slow to start        | Start in seconds  |
+| Strong isolation     | Lighter isolation |
 
 Containers are just easier to work with for this kind of project.
 
+----------------------
+
 **Secrets vs Environment Variables**
+
 Environment variables are easy to use but can be exposed.
 Docker Secrets are more secure, they store sensitive data like passwords in temporary files that only the container can access.
 
+| Environment Variables | Docker Secrets               |
+|-----------------------|------------------------------|
+| Stored in .env files  | Stored in encrypted files    |
+| Easy to edit          | Better for passwords         |
+| Can be exposed        | Not visible in container env |
+
+I used .env for general settings and Docker secrets for database passwords.
+
+----------------------
+
 **Docker Network vs Host Network**
+
 Using the host network bridges the container directly to the host machine's interfaces, removing network isolation. This project uses a custom Docker network, so only NGINX is exposed to the outside. WordPress and MariaDB stay hidden and communicate internally.
 
+| Custom Docker Network             | Host Network                           |
+|-----------------------------------|----------------------------------------|
+| Containers talk over internal DNS | Containers use host's network directly |
+| More secure                       | Less isolation                         |
+| Default setup                     | Bypasses Docker networking             |
+
+A custom bridge network keeps things clean - only NGINX is exposed to the outside.
+
+----------------------
+
 **Docker Volumes vs Bind Mounts**
-Bind mounts rely on the specific directory structure of the host machine, mapping a host folder directly into the container. Docker named volumes are fully managed by the Docker daemon, making them more portable, secure, and easier to back up. In this project, data is stored in `/home/lkoc/data` using named volumes to ensure database entries and website files survive container restarts.
+
+Bind mounts connect a container directly to a folder on the host machine. Docker volumes are managed by Docker itself, making them safer and easier to move. In this project, data is stored in `/home/lkoc/data` using named volumes to keep our database and website safe when containers restart.
+
+| Docker Volumes        | Bind Mounts                    |
+|-----------------------|--------------------------------|
+| Managed by Docker     | Direct link to host folder     |
+| Portable and safe     | Depends on host file structure |
+| Better for production | Good for development           ||
+
+Named volumes store data in `/home/lkoc/data` on the host machine.
 
 ---
 
-## Instructions
+## How to use it
 
 **Requirements**
-Make sure Docker, Docker Compose, and Make are installed.
+
+Make sure all
+* Docker,
+* Docker Compose,
+* Make
+
+are installed.
 Add `lkoc.42.fr` to your `/etc/hosts` file and point it to your local IP.
 
 **Start the project**
-Navigate to the root directory where the `Makefile` is located and execute either of following commands to build the Docker images and start the infrastructure in the background:
-`make`
-`docker compose up -d --build`
+
+Open your terminal, go to the folder with the `Makefile` and type:
+* `make`
+
+to build the Docker images and start the infrastructure in the background
 
 **Shutdown**
+
 To stop and remove the containers and network use either:
-`make down`
-`docker compose down`
+* `make down`
 
 ---
 
@@ -71,5 +117,6 @@ To stop and remove the containers and network use either:
 * WordPress CLI documentation: https://developer.wordpress.org/cli/
 
 **AI Tools Usage:**
-I used AI tools to help learn and understand the concepts.
+
+I used AI tools to help learn and understand the concepts and debug issues with container communication.
 All generated code and ideas were tested, reviewed, and rewritten to make sure I fully understood them and followed the project rules.
