@@ -1,49 +1,77 @@
 *This project has been created as part of the 42 curriculum by <lkoc>*
 
-# Inception: Docker Infrastructure Project
+# Inception
 
 ## Project Description
-The primary goal of this system administration project is to build a robust, small-scale infrastructure using Docker and Docker Compose. The environment virtualizes three distinct services running in separate, dedicated containers: an NGINX web server to handle secure HTTPS traffic, a WordPress installation running on PHP-FPM for content management, and a MariaDB instance serving as the database backend. The entire architecture relies on an internal Docker network for secure container-to-container communication and utilizes Docker volumes to ensure long-term data persistence.
+The goal of this project is to build a small, working infrastructure using Docker and Docker Compose.
+It runs three services, each in its own container:
+
+NGINX - handles secure traffic (HTTPS only)
+
+WordPress + PHP-FPM - runs the website
+
+MariaDB - stores all the data
+
+All containers talk to each other over a dedicated Docker network.
+Data is kept safe using Docker volumes, so nothing is lost when containers stop or restart.
 
 ---
 
-## Architectural & Design Choices
+## Design Choices
 
 **Virtual Machines vs Docker Containers**
-Virtual Machines emulate a complete hardware stack and require a full guest Operating System, making them resource-heavy and slow to boot. Docker containers, on the other hand, share the host system's kernel, providing process-level isolation. This makes containers significantly more lightweight, allowing them to start almost instantly while consuming a fraction of the CPU and RAM.
+Virtual machines need a full operating system and take up a lot of resources.
+Docker containers share the host system’s kernel, which makes them fast, lightweight, and easy to start.
+
+| Virtual Machines      | Docker Containers      |
+| ------------- | ------------- |
+| Run a full OS inside | Share the host OS |
+| Heavy on resources | Light and fast |
+	
+Run a full OS inside	Share the host OS
+Heavy on resources	Light and fast
+Slow to start	Start in seconds
+Strong isolation	Lighter isolation
+Containers are just easier to work with for this kind of project.
 
 **Secrets vs Environment Variables**
-Environment variables are easy to configure and useful for general settings like domain names, but they can be exposed if the container's environment is inspected. Docker Secrets provide a much higher level of security for sensitive data (like database passwords) by mounting them as temporary, encrypted files inside the container's memory rather than exposing them as plain text variables.
+Environment variables are easy to use but can be exposed.
+Docker Secrets are more secure, they store sensitive data like passwords in temporary files that only the container can access.
 
 **Docker Network vs Host Network**
-Using the host network bridges the container directly to the host machine's interfaces, removing network isolation. This project implements a custom Docker bridge network, which isolates the services from the outside world. Only the NGINX container exposes a port to the host, while WordPress and MariaDB communicate securely over the internal DNS without being accessible from the public internet.
+Using the host network bridges the container directly to the host machine's interfaces, removing network isolation. This project uses a custom Docker network, so only NGINX is exposed to the outside. WordPress and MariaDB stay hidden and communicate internally.
 
 **Docker Volumes vs Bind Mounts**
-Bind mounts rely on the specific directory structure of the host machine, mapping a host folder directly into the container. Docker named volumes are fully managed by the Docker daemon, making them more portable, secure, and easier to back up. In this architecture, persistent data is routed to `/home/lkoc/data` using named volumes to ensure database entries and website files survive container restarts.
+Bind mounts rely on the specific directory structure of the host machine, mapping a host folder directly into the container. Docker named volumes are fully managed by the Docker daemon, making them more portable, secure, and easier to back up. In this project, data is stored in `/home/lkoc/data` using named volumes to ensure database entries and website files survive container restarts.
 
 ---
 
 ## Instructions
 
-**Prerequisites**
-You need Docker, Docker Compose, and Make installed on your system. Ensure that your local hosts file redirects `lkoc.42.fr` to your local IP.
+**Requirements**
+Make sure Docker, Docker Compose, and Make are installed.
+Add `lkoc.42.fr` to your `/etc/hosts` file and point it to your local IP.
 
-**Deployment**
-Navigate to the root directory where the `Makefile` is located and execute the following command to build the images and start the infrastructure in the background:
-make
+**Start the project**
+Navigate to the root directory where the `Makefile` is located and execute either of following commands to build the Docker images and start the infrastructure in the background:
+`make`
+`docker compose up -d --build`
 
 **Shutdown**
-To safely stop the containers and remove the networks, run:
-make down
+To stop and remove the containers and network use either:
+`make down`
+`docker compose down`
 
 ---
 
 ## Resources & AI Usage
 
-**Official Documentation:**
+**Documentation:**
 * Docker & Docker Compose Docs: https://docs.docker.com
 * NGINX Documentation: https://nginx.org/en/docs
 * MariaDB Knowledge Base: https://mariadb.com/kb
+* WordPress CLI documentation: https://developer.wordpress.org/cli/
 
 **AI Tools Usage:**
-During the development of this project, AI (Large Language Models) was used as an interactive learning assistant. Specifically, AI was prompted to explain the differences between Docker volumes and bind mounts, to assist in debugging NGINX SSL certificate generation errors, and to review the shell scripts (entrypoint.sh) for infinite loops or bad practices. All generated concepts were manually verified, tested, and rewritten to ensure full comprehension and compliance with the subject rules.
+I used AI tools to help learn and understand the concepts.
+All generated code and ideas were tested, reviewed, and rewritten to make sure I fully understood them and followed the project rules.
