@@ -1,117 +1,65 @@
 *This project has been created as part of the 42 curriculum by <lkoc>*
 
-# USER_DOC
+# User Documentation
 
 ## Overview
+This project runs a website infrastructure using three main services:
+* **WordPress** (The website engine)
+* **NGINX** (The secure web server)
+* **MariaDB** (The database)
 
-This project provides you with three services 
-    WordPress (PHP-FPM)
-    NGINX (HTTPS server)
-    MariaDB (database)
+Each service runs in its own isolated "container". These containers share a private network to communicate with each other safely.
 
-All three services are stored in "containers" which are separate boxes 
-sharing OS core which makes them fast to build.
-All three services share network and are able to "speak" with each other.
-
-------------------------------------------------------------------------
+---
 
 ## Available Services
+Once the project is running, you can access:
+* **Main Website:** https://lkoc.42.fr
+* **Admin Panel:** https://lkoc.42.fr/wp-admin
 
--   Website: https://your-domain
--   WordPress Admin Panel: https://your-domain/wp-admin
+---
 
-------------------------------------------------------------------------
+## How to start it
+To start the infrastructure:
+1. Open your terminal.
+2. Go to the root folder (where the `Makefile` is).
+3. Run the command:
+   `make`
 
-## Starting the Project
+This will build the images and start all services in the background.
 
-To start the project:
-After downloading the repository go it root and use following commands.
-Please check if you are in right folder you have to be in a place where
-you have Makefile.
+---
 
-------------------------------------------------------------------------
-## Building the Project
+## How to stop it
+To stop and remove all containers, networks, and volumes, run:
+`make down`
 
-if you use command "make" the project will build it self from the scrach 
-using docker compose so you can use it for a shortcut or go with command
-docker compose up -d --build 
-
-to use docker compose up -d --build you have to go to srcs file and use
-it there
-
-------------------------------------------------------------------------
-
-## Stopping the Project
-
-in order to stop the containers please use make down or 
-docker compose down similarlly as in the previous section
-
-------------------------------------------------------------------------
-
-## Accessing the Website
-
-Open in browser:
-
-https://your-domain
-
-------------------------------------------------------------------------
-
-## Accessing Admin Panel
-
-Open in browser:
-
-https://your-domain/wp-admin
-
-Use credentials defined in .env file.
-
-------------------------------------------------------------------------
+---
 
 ## Credentials
+For security, no passwords are hardcoded. All logins, passwords, and database names are stored in the `.env` file located in the `srcs` folder.
 
-Credentials are stored in: - .env file.
-
-------------------------------------------------------------------------
+---
 
 ## Checking Services
+To see if your services are running correctly:
+* `docker ps` – Lists all active containers.
+* `docker compose logs -f` – Shows live logs and error messages.
 
-docker ps docker compose logs -f
+---
 
-------------------------------------------------------------------------
+## Verifying Security (HTTPS)
+NGINX is set up to allow only secure connections (port 443). You can test this using:
+* `curl -I http://lkoc.42.fr` – Connection should be refused.
+* `curl -kI https://lkoc.42.fr` – Connection should be successful.
 
-## Verifying NGINX (HTTPS only)
+---
 
-Commands used to verify that NGINX is accessible only through port 443.
-
-curl -I http://localhost curl -kI https://localhost
-
-nc -zv localhost 80 nc -zv localhost 443
-
-------------------------------------------------------------------------
-
-## Verifying Database
-
-Enter MariaDB container:
-
-docker exec -it mariadb sh
-
-Login to database:
-
-mariadb -u root -p\$(cat /run/secrets/db_root_password)
-
-Check database structure:
-
-SHOW DATABASES; USE wordpress; SHOW TABLES;
-
-Verify WordPress users:
-
-SELECT ID, user_login, user_email FROM wp_users;
-
-Check roles:
-
-SELECT \* FROM wp_usermeta WHERE meta_key='wp_capabilities';
-
-Exit:
-
-exit
-
-------------------------------------------------------------------------
+## Verifying the Database
+To check the data inside MariaDB:
+1. Enter the container: `docker exec -it mariadb sh`
+2. Log in to the database: `mariadb -u root -p$(cat /run/secrets/db_root_password)`
+3. List databases: `SHOW DATABASES;`
+4. Use WordPress DB: `USE wordpress;`
+5. See tables: `SHOW TABLES;`
+6. Exit: `exit`
