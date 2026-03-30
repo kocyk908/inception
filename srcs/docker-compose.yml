@@ -1,72 +1,67 @@
 services:
   mariadb:
-    image: mariadb
     build: ./requirements/mariadb
     container_name: mariadb
     restart: unless-stopped
-    env_file:
-      - .env
+    env_file: .env
     volumes:
       - db_data:/var/lib/mysql
     networks:
       - inception
     healthcheck:
-      test: ["CMD-SHELL", "mariadb-admin --protocol=socket -uroot -p$${DB_ROOT_PASSWORD} ping -S /run/mysqld/mysqld.sock || exit 1"]
+      test: ["CMD-SHELL", "mariadb-admin ping -uroot -p$${DB_ROOT_PW} || exit 1"]
       interval: 5s
-      timeout: 3s
-      retries: 20
+      timeout: 2s
+      retries: 10
 
   wordpress:
-    image: wordpress
     build: ./requirements/wordpress
     container_name: wordpress
     restart: unless-stopped
-    env_file:
-      - .env
+    env_file: .env
+    depends_on:
+      mariadb:
+        condition: service_healthy
     volumes:
       - wp_data:/var/www/html
     networks:
       - inception
-    depends_on:
-      mariadb:
-        condition: service_healthy
     healthcheck:
       test: ["CMD-SHELL", "[ -f /var/www/html/wp-config.php ] || exit 1"]
-      interval: 10s
-      timeout: 3s
-      retries: 30
+      interval: 5s
+      timeout: 2s
+      retries: 15
 
   nginx:
-    image: nginx
     build: ./requirements/nginx
     container_name: nginx
     restart: unless-stopped
-    env_file:
-      - .env
+    env_file: .env
+    depends_on:
+      wordpress:
+        condition: service_healthy
     ports:
       - "443:443"
     volumes:
       - wp_data:/var/www/html:ro
     networks:
       - inception
-    depends_on:
-      - wordpress
 
 networks:
   inception:
-    driver: bridge
+    name: ${NETWORK}
 
 volumes:
-  db_data:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: ${DATA_PATH}/db
-
   wp_data:
     driver: local
     driver_opts:
       type: none
       o: bind
       device: ${DATA_PATH}/wp
+
+  db_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${DATA_PATH}/db
