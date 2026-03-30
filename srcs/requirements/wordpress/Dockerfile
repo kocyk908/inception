@@ -4,6 +4,7 @@ RUN apk update && apk upgrade && apk add --no-cache \
     bash \
     curl \
     mariadb-client \
+    netcat-openbsd \
     php82 \
     php82-fpm \
     php82-mysqli \
