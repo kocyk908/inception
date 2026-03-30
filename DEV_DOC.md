@@ -2,17 +2,11 @@
 
 # Developer Documentation
 
-## Requirements
-
--   Docker
--   Docker Compose
--   Make
-
----
-
-## Setup
-
-Before you start, you need a `.env` file in the `srcs` folder. This file holds all the passwords and domain names. Use gitignore file to prevent pushing this file to your git repository.
+## 1. Setup from Scratch
+To set up the environment, you need:
+* **Prerequisites:** Docker, Docker Compose, and Make must be installed.
+* **Configuration:** Create a `.env` file in the `srcs` folder.
+* **Secrets:** Ensure passwords for the database and admin are defined in the `.env` file. (Do not push this file to Git!)
 
 Below are the required variables:
 
@@ -37,38 +31,28 @@ Below are the required variables:
 * `DOMAIN_NAME` - Your login domain (lkoc.42.fr).
 * `DATA_PATH` - Path to persistent data on host (/home/lkoc/data).
 
----
+## 2. Build and Launch
+We use a `Makefile` as a shortcut for long Docker Compose commands.
 
-## Building and Running
-We use a `Makefile` to control Docker Compose.
-* Build and start everything: `make` (This runs `docker compose up -d --build`)
-* Stop and remove containers: `make down`
-* Full clean (removes containers, networks, and volumes): `make clean`
+**Start the infrastructure:**
+* Command: `make`
+* What it actually does: It runs `docker compose up -d --build` inside the `srcs` folder. This command reads your `docker-compose.yml`, builds the images from scratch, and starts the containers in the background.
 
----
+**Stop the infrastructure:**
+* Command: `make down`
+* What it actually does: It runs `docker compose down`. This safely stops the running containers and removes the custom network.
 
-## Data Storage (Volumes)
-If you restart the containers, your data is safe. We use Docker named volumes linked to the host machine.
-* Database files are saved in: `/home/lkoc/data/db`
-* WordPress files are saved in: `/home/lkoc/data/wp`
+## 3. Manage Containers and Volumes
+Use these commands to manage the stack:
+* `docker compose ps` – View status of containers.
+* `docker compose logs -f` – See live error logs.
+* `docker exec -it <name> sh` – Access a container's terminal.
+* `docker volume ls` – List active volumes.
 
----
+## 4. Data Storage and Persistence
+All project data is stored on the host machine to ensure it is not lost:
+* **Path:** `/home/lkoc/data/`
+* **WordPress files:** Stored in the `wp` volume.
+* **Database files:** Stored in the `db` volume.
 
-## Useful Commands for Debugging
-If something goes wrong, use these commands:
-
-**Check Status:**
-* `docker ps` - See if all containers are running and healthy.
-
-**Check Logs (Errors):**
-* `docker compose logs -f` - See live error messages from all services.
-* `docker compose logs wordpress` - See logs only for the WordPress container.
-
-**Go Inside a Container:**
-* `docker exec -it mariadb sh` - Open a terminal inside the database to check files.
-* `docker exec -it wordpress sh` - Open a terminal inside WordPress.
-
-**Network & Volumes:**
-* `docker network ls` - Check if the "inception" network exists.
-* `docker network inspect inception` - See which containers are connected to the network.
-* `docker volume ls` - Check if your "wp" and "db" volumes are created.
+Even if you delete the containers using `make down`, the data stays safe in these folders. When you run `make` again, the website will load exactly as you left it.
