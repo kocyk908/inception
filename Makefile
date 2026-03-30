@@ -7,9 +7,9 @@ all: 			hosts up
 
 hosts:
 				@set -a; . $(ENV_PATH); set +a; \
-				if ! grep -q "$${DOMAIN_NAME}" /etc/hosts; then \
-					sudo sh -c "echo '127.0.0.1 $${DOMAIN_NAME}' >> /etc/hosts"; \
-					echo "Added $${DOMAIN_NAME} to /etc/hosts"; \
+				if ! grep -q "$${DOMAIN}" /etc/hosts; then \
+					sudo sh -c "echo '127.0.0.1 $${DOMAIN}' >> /etc/hosts"; \
+					echo "Added $${DOMAIN} to /etc/hosts"; \
 				fi
 
 dirs:
