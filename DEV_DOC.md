@@ -13,23 +13,24 @@ Below are the required variables:
 **Database (MariaDB):**
 * `DB_NAME` - Name of the WordPress database.
 * `DB_USER` - Username for the database (not root).
-* `DB_PASSWORD` - Password for the database user.
-* `DB_ROOT_PASSWORD` - Password for the MariaDB root user.
+* `DB_PW` - Password for the database user.
+* `DB_ROOT_PW` - Password for the MariaDB root user.
 * `DB_HOST` - Internal hostname of the database container (mariadb).
 
 **WordPress:**
-* `WP_TITLE` - The title of your website.
-* `WP_URL` - The full URL (https://lkoc.42.fr).
-* `WP_ADMIN_USER` - Admin login (Must NOT contain the word 'admin').
-* `WP_ADMIN_PASSWORD` - Secure password for the admin.
-* `WP_ADMIN_EMAIL` - Email address for the admin.
-* `WP_USER_NAME` - Second user login.
-* `WP_USER_PASSWORD` - Password for the second user.
-* `WP_USER_EMAIL` - Email for the second user.
+* `WORDPRESS_TITLE` - The title of your website.
+* `WORDPRESS_ADM` - Admin login (Must NOT contain the word 'admin').
+* `WORDPRESS_ADM_PW` - Secure password for the admin.
+* `WORDPRESS_ADM_EMAIL` - Email address for the admin.
+* `WORDPRESS_USER` - Second user login.
+* `WORDPRESS_USER_PW` - Password for the second user.
+* `WORDPRESS_USER_EMAIL` - Email for the second user.
 
 **System Settings:**
-* `DOMAIN_NAME` - Your login domain (lkoc.42.fr).
+* `LOGIN` - Your VM user login.
+* `DOMAIN` - Your login domain (lkoc.42.fr).
 * `DATA_PATH` - Path to persistent data on host (/home/lkoc/data).
+* `NETWORK` - !!!!!!!!!!!poprawic!!!!!!!!!!!!!!!!.
 
 ## 2. Build and Launch
 We use a `Makefile` as a shortcut for long Docker Compose commands.
@@ -52,7 +53,7 @@ Use these commands to manage the stack:
 ## 4. Data Storage and Persistence
 All project data is stored on the host machine to ensure it is not lost:
 * **Path:** `/home/lkoc/data/`
-* **WordPress files:** Stored in the `wp` volume.
+* **WordPress files:** Stored in the `WORDPRESS` volume.
 * **Database files:** Stored in the `db` volume.
 
 Even if you delete the containers using `make down`, the data stays safe in these folders. When you run `make` again, the website will load exactly as you left it.
