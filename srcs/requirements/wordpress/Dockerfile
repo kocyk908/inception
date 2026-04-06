@@ -1,5 +1,9 @@
 FROM alpine:3.22
 
+EXPOSE 9000
+
+WORKDIR /var/www/html
+
 RUN apk update && apk upgrade && apk add --no-cache \
     bash \
     curl \
@@ -31,8 +35,6 @@ RUN ln -s /usr/bin/php82 /usr/bin/php && \
 RUN curl -fsSL https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar -o /usr/local/bin/wp \
     && chmod +x /usr/local/bin/wp
 
-WORKDIR /var/www/html
-
 RUN mkdir -p /usr/src/wordpress && \
     curl -o /tmp/wordpress.tar.gz -fSL https://wordpress.org/latest.tar.gz && \
     tar -xzf /tmp/wordpress.tar.gz -C /usr/src/wordpress --strip-components=1 && \
@@ -42,8 +44,6 @@ RUN mkdir -p /usr/src/wordpress && \
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 
 RUN chmod +x /usr/local/bin/entrypoint.sh
-
-EXPOSE 9000
 
 ENTRYPOINT ["entrypoint.sh"]
 CMD ["/usr/sbin/php-fpm82", "-F"]
