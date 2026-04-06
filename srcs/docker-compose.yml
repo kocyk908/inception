@@ -1,8 +1,8 @@
 services:
   mariadb:
+    container_name: mariadb
     image: mariadb
     build: ./requirements/mariadb
-    container_name: mariadb
     restart: unless-stopped
     env_file:
       - .env
@@ -17,9 +17,9 @@ services:
       retries: 20
 
   wordpress:
+    container_name: wordpress
     image: wordpress
     build: ./requirements/wordpress
-    container_name: wordpress
     restart: unless-stopped
     env_file:
       - .env
@@ -37,9 +37,9 @@ services:
       retries: 30
 
   nginx:
+    container_name: nginx
     image: nginx
     build: ./requirements/nginx
-    container_name: nginx
     restart: unless-stopped
     env_file:
       - .env

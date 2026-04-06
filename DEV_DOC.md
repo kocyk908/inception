@@ -27,10 +27,10 @@ Below are the required variables:
 * `WORDPRESS_USER_EMAIL` - Email for the second user.
 
 **System Settings:**
-* `LOGIN` - Your VM user login.
-* `DOMAIN` - Your login domain (lkoc.42.fr).
+* `LOGIN` - Your 42 intra login.
+* `DOMAIN` - Your login domain (user.42.fr).
 * `DATA_PATH` - Path to persistent data on host (/home/lkoc/data).
-* `NETWORK` - !!!!!!!!!!!poprawic!!!!!!!!!!!!!!!!.
+* `NETWORK` - The dedicated Docker bridge network name.
 
 ## 2. Build and Launch
 We use a `Makefile` as a shortcut for long Docker Compose commands.
