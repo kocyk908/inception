@@ -41,16 +41,16 @@ Containers are just easier to work with for this kind of project.
 
 **Secrets vs Environment Variables**
 
-Environment variables are easy to use but can be exposed.
-Docker Secrets are more secure, they store sensitive data like passwords in temporary files that only the container can access.
+Environment variables are easy to use but can be exposed if not handled carefully.
+Docker Secrets are more secure, storing sensitive data in temporary memory files that only the container can access.
 
 | Environment Variables | Docker Secrets               |
 |-----------------------|------------------------------|
 | Stored in .env files  | Stored in encrypted files    |
-| Easy to edit          | Better for passwords         |
+| Easy to edit          | Better for complex production setups         |
 | Can be exposed        | Not visible in container env |
 
-I used .env for general settings and Docker secrets for database passwords.
+For this project, all sensitive data is securely managed through a `.env` file, which is excluded from Git via `.gitignore` to prevent leaks. This fulfills the security requirements without overcomplicating the infrastructure.
 
 ----------------------
 
@@ -82,7 +82,7 @@ Named volumes store data in `/home/lkoc/data` on the host machine.
 
 ---
 
-## How to use it
+## Instructions
 
 **Requirements**
 
