@@ -23,7 +23,7 @@ if [ ! -f "/var/www/html/wp-config.php" ]; then
         --allow-root
 fi
 
-if ! wp core is-installed --path="/var/www/html" --allow-root 2>/dev/null; then
+if [ ! wp core is-installed --path="/var/www/html" --allow-root 2>/dev/null ]; then
     echo "Installing WordPress"
     wp core install \
         --path="/var/www/html" \
