@@ -76,7 +76,7 @@ Bind mounts connect a container directly to a folder on the host machine. Docker
 |-----------------------|--------------------------------|
 | Managed by Docker     | Direct link to host folder     |
 | Portable and safe     | Depends on host file structure |
-| Better for production | Good for development           ||
+| Better for production | Good for development           |
 
 Named volumes store data in `/home/lkoc/data` on the host machine.
 
