@@ -16,6 +16,7 @@ Below are the required variables:
 * `DB_PW` - Password for the database user.
 * `DB_ROOT_PW` - Password for the MariaDB root user.
 * `DB_HOST` - Internal hostname of the database container (mariadb).
+* `DB_PORT` - The internal port number on which the MariaDB server listens for incoming SQL connections.
 
 **WordPress:**
 * `WORDPRESS_TITLE` - The title of your website.

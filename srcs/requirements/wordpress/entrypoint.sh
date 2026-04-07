@@ -8,7 +8,7 @@ if [ ! -f "/var/www/html/wp-settings.php" ]; then
     chown -R www-data:www-data /var/www/html
 fi
 
-until mariadb-admin ping -h"${DB_HOST}" -u"${DB_USER}" -p"${DB_PW}" --silent; do
+until mariadb-admin ping -h"${DB_HOST}" -P"${DB_PORT}" -u"${DB_USER}" -p"${DB_PW}" --silent; do
     sleep 2
 done
 echo "DB is ready"
@@ -19,11 +19,11 @@ if [ ! -f "/var/www/html/wp-config.php" ]; then
         --dbname="${DB_NAME}" \
         --dbuser="${DB_USER}" \
         --dbpass="${DB_PW}" \
-        --dbhost="${DB_HOST}:3306" \
+        --dbhost="${DB_HOST}:${DB_PORT}" \
         --allow-root
 fi
 
-if [ ! wp core is-installed --path="/var/www/html" --allow-root 2>/dev/null ]; then
+if ! wp core is-installed --path="/var/www/html" --allow-root 2>/dev/null; then
     echo "Installing WordPress"
     wp core install \
         --path="/var/www/html" \
