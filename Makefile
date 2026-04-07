@@ -19,12 +19,12 @@ dirs:
 build: 			dirs
 				docker compose --env-file $(ENV_PATH) -f $(COMPOSE_PATH) build
 
+down:
+				docker compose --env-file $(ENV_PATH) -f $(COMPOSE_PATH) down
+
 up: 			build
 				docker compose --env-file $(ENV_PATH) -f $(COMPOSE_PATH) up -d
 				@echo "Infrastructure is up! Website: https://lkoc.42.fr"
-
-down:
-				docker compose --env-file $(ENV_PATH) -f $(COMPOSE_PATH) down
 
 clean: 			down
 				docker compose --env-file $(ENV_PATH) -f $(COMPOSE_PATH) down -v
