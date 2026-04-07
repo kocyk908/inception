@@ -10,6 +10,9 @@ if [ ! -d /var/lib/mysql/mysql ]; then
 
     echo "[init] Creating init.sql"
     cat <<EOF > /tmp/init.sql
+
+ALTER USER 'root'@'localhost' IDENTIFIED BY '${DB_ROOT_PW}';
+
 CREATE DATABASE IF NOT EXISTS \`${DB_NAME}\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 CREATE USER IF NOT EXISTS '${DB_USER}'@'%' IDENTIFIED BY '${DB_PW}';
 ALTER USER '${DB_USER}'@'%' IDENTIFIED BY '${DB_PW}';

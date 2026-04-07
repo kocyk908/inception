@@ -58,7 +58,7 @@ NGINX is set up to allow only secure connections (port 443). You can test this u
 ## Verifying the Database
 To check the data inside MariaDB:
 1. Enter the container: `docker exec -it mariadb sh`
-2. Log in to the database: `mariadb -u root -p$(cat /run/secrets/db_root_password)`
+2. Log in to the database: `mariadb -u root -p`
 3. List databases: `SHOW DATABASES;`
 4. Use WordPress DB: `USE wordpress;`
 5. See tables: `SHOW TABLES;`
