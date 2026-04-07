@@ -47,7 +47,7 @@ Docker Secrets are more secure, storing sensitive data in temporary memory files
 | Environment Variables | Docker Secrets               |
 |-----------------------|------------------------------|
 | Stored in .env files  | Stored in encrypted files    |
-| Easy to edit          | Better for complex production setups         |
+| Easy to edit/inject          | Better for complex production setups         |
 | Can be exposed        | Not visible in container env |
 
 For this project, all sensitive data is securely managed through a `.env` file, which is excluded from Git via `.gitignore` to prevent leaks. This fulfills the security requirements without overcomplicating the infrastructure.
