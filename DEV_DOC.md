@@ -6,7 +6,8 @@
 To set up the environment, you need:
 * **Prerequisites:** Docker, Docker Compose, and Make must be installed.
 * **Configuration:** Create a `.env` file in the `srcs` folder.
-* **Secrets:** Ensure passwords for the database and admin are defined in the `.env` file. (Do not push this file to Git!)
+
+Ensure passwords for the database and admin are defined in the `.env` file. (Do not push this file to Git!)
 
 Below are the required variables:
 
