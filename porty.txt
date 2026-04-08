@@ -1,7 +1,11 @@
 ngnix
+    compose (prawy)
+    default.conf 2 razy
+    dockerfile
 
 wordpress
-
+    default.conf - ngnix
+    dockerfile wordpress 2 razy
 maria
     env file
     dockerfile mariadb

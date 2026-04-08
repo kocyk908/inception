@@ -10,7 +10,7 @@ COPY entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
 WORKDIR /var/lib/mysql
-EXPOSE 3309
+EXPOSE 3306
 VOLUME ["/var/lib/mysql"]
 
 ENTRYPOINT ["entrypoint.sh"]
