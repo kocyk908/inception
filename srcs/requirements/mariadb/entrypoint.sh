@@ -26,4 +26,4 @@ else
 fi
 
 echo "[run] Starting MariaDB"
-exec mariadbd --user=mysql
+exec mariadbd --user=mysql --port=${DB_PORT}

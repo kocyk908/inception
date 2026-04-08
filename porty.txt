@@ -1,0 +1,7 @@
+ngnix
+
+wordpress
+
+maria
+    env file
+    dockerfile mariadb
